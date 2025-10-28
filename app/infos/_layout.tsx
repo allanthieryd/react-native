@@ -2,7 +2,7 @@ import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { ImageBackground, StyleSheet } from 'react-native';
 
-export default function DetailsLayout() {
+export default function InfosLayout() {
   return (
     <ImageBackground 
       source={require('../../assets/images/1735502381444.jpg')}

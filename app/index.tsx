@@ -12,11 +12,11 @@ export default function HomeScreen() {
       <View style={styles.buttonContainer}>
       <Button
         title="Aller à la page 1"
-        onPress={() => router.push('/details/tab1')}
+        onPress={() => router.push('/infos/tab1')}
       />
       <Button
         title="Aller à la page 2"
-        onPress={() => router.push('/details/tab2')}
+        onPress={() => router.push('/infos/tab2')}
         />
         </View>
     </View>

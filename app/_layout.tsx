@@ -18,9 +18,9 @@ export default function RootLayout() {
           options={{ headerShown: false }}
         />
         <Stack.Screen 
-          name="details" 
+          name="infos" 
           options={{ 
-            title: 'Détails',
+            title: 'Infos',
             headerShown: true,
             headerTransparent: true,
           }}
