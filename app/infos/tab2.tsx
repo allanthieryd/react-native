@@ -1,5 +1,6 @@
-import { StyleSheet, View, Text, ScrollView, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'expo-router';
 import FicheUser from '@/components/FicheUser';
 import { User } from '@/model/User';
 import { fetchUsers } from '@/service/UserService';
@@ -8,6 +9,7 @@ export default function Tab2Screen() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     loadUsers();
@@ -24,6 +26,13 @@ export default function Tab2Screen() {
       setLoading(false);
     }
   };
+
+  const handleUserPress = (userId: number) => {
+    router.push({
+        pathname: '/infos/details/[id]',
+        params: { id: userId.toString() }
+    } as any);
+};
 
   if (loading) {
     return (
@@ -44,14 +53,24 @@ export default function Tab2Screen() {
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
-      <Text style={styles.title}>Users</Text>
+      <Text style={styles.spacer}>
+      
+                          </Text>
+      <Text style={styles.title}>Utilisateurs de l&apos;API</Text>
       {users.map((user) => (
-        <FicheUser {...user} key={user.id} />
+        <TouchableOpacity 
+          key={user.id} 
+          onPress={() => handleUserPress(user.id)}
+          activeOpacity={0.7}
+        >
+          <FicheUser {...user} />
+        </TouchableOpacity>
       ))}
       <Text style={styles.copyright}>Copyright</Text>
     </ScrollView>
   );
 }
+
 
 const styles = StyleSheet.create({
   scrollContainer: {
@@ -92,5 +111,8 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 40,
     color: '#b3afafff',
+  },
+  spacer: {
+    height: 50,
   },
 });

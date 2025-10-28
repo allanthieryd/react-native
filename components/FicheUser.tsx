@@ -23,7 +23,7 @@ export default function FicheUser({
 }: User) {
     return(
         <ImageBackground
-            source={require('@/assets/images/unnamed.jpg')} // Votre image
+            source={require('@/assets/images/background_gray.jpg')} // Votre image
             style={styles.card}
             imageStyle={styles.backgroundImage}
         >
@@ -89,7 +89,8 @@ const styles = StyleSheet.create({
     card: {
         borderRadius: 15,
         margin: 10,
-        width: '90%',
+        width: 350, // Largeur fixe en pixels
+        minHeight: 500,
         overflow: 'hidden',
         shadowColor: "#000",
         shadowOffset: {
@@ -100,10 +101,15 @@ const styles = StyleSheet.create({
         shadowRadius: 4.65,
         elevation: 6,
     },
+    content: {
+        padding: 15,
+    },
     backgroundImage: {
+        width: '100%',
+        height: '100%',
         borderRadius: 15,
-        opacity: 1, // Opacité de l'image de fond
-        margin: 20,
+        opacity: 0.6, // Opacité de l'image de fond
+        // margin: 20,
         borderWidth: 2,
         borderColor: '#4CAF50',
     },
@@ -111,9 +117,6 @@ const styles = StyleSheet.create({
         ...StyleSheet.absoluteFillObject,
         backgroundColor: 'rgba(255, 255, 255, 0.5)', // Overlay blanc semi-transparent
         borderRadius: 15,
-    },
-    content: {
-        padding: 15,
     },
     header: {
         flexDirection: "row",
@@ -179,6 +182,6 @@ const styles = StyleSheet.create({
         lineHeight: 20,
     },
     spacer: {
-        height: 10,
+        height: 30,
     },
 });

@@ -1,6 +1,6 @@
 import { User, UserAPI } from "@/model/User";
 
-const API_URL = 'https://dummyjson.com/users?limit=10';
+const API_URL = 'https://dummyjson.com/users';
 
 export async function fetchUsers(): Promise<User[]> {
     try {
