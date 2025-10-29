@@ -1,6 +1,11 @@
-import { Image, StyleSheet, Text, View, ImageBackground } from "react-native";
+import { Image, StyleSheet, Text, View, ImageBackground, TouchableOpacity } from "react-native";
 import { getColorEmoji } from "@/utils/colorUtils";
 import { User } from "@/model/User";
+import { Ionicons } from "@expo/vector-icons";
+
+interface FicheUserProps extends User {
+  onDelete?: () => void; // Nouvelle prop
+}
 
 export default function FicheUser({ 
     nom, 
@@ -19,8 +24,9 @@ export default function FicheUser({
     couleurYeux,
     couleurCheveux,
     typeCheveux,
-    role 
-}: User) {
+    role,
+    onDelete
+}: FicheUserProps) {
     return(
         <ImageBackground
             source={require('@/assets/images/background_gray.jpg')} // Votre image
@@ -29,6 +35,15 @@ export default function FicheUser({
         >
             {/* Overlay semi-transparent */}
             <View style={styles.overlay} />
+
+            {onDelete && (
+                <TouchableOpacity 
+                    style={styles.deleteButton}
+                    onPress={onDelete}
+                >
+                    <Ionicons name="trash" size={20} color="white" />
+                </TouchableOpacity>
+            )}
             
             <View style={styles.content}>
                 <View style={styles.header}>
@@ -86,6 +101,26 @@ export default function FicheUser({
 }
 
 const styles = StyleSheet.create({
+     deleteButton: {
+        position: 'absolute',
+        top: 15,
+        right: 15,
+        backgroundColor: '#f44336',
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 10,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+    },
     card: {
         borderRadius: 15,
         margin: 10,

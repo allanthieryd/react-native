@@ -53,3 +53,64 @@ export async function fetchUserById(id: string): Promise<UserAPI> {
         throw error;
     }
 }
+
+export async function addUser(userData: {
+  firstName: string;
+  lastName: string;
+  age: number;
+}): Promise<{ success: boolean; message: string; data?: any }> {
+  try {
+    const response = await fetch('https://dummyjson.com/users/add', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(userData)
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      return {
+        success: true,
+        message: 'Utilisateur ajouté avec succès',
+        data: data
+      };
+    } else {
+      return {
+        success: false,
+        message: 'Erreur lors de l\'ajout'
+      };
+    }
+  } catch (error) {
+    console.error('Erreur:', error);
+    return {
+      success: false,
+      message: 'Impossible de contacter le serveur'
+    };
+  }
+}
+
+export async function deleteUser(id: number): Promise<{ success: boolean; message: string }> {
+  try {
+    const response = await fetch(`https://dummyjson.com/users/${id}`, {
+      method: 'DELETE',
+    });
+      
+    if (response.ok) {
+      return {
+        success: true,
+        message: 'Utilisateur supprimé avec succès'
+      };
+    } else {
+      return {
+        success: false,
+        message: 'Erreur lors de la suppression'
+      };
+    }
+  } catch (error) {
+    console.error('Erreur:', error);
+    return {
+      success: false,
+      message: 'Impossible de contacter le serveur'
+    };
+  }
+}

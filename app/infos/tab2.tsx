@@ -2,13 +2,18 @@ import { StyleSheet, View, Text, ScrollView, ActivityIndicator, TouchableOpacity
 import { useEffect, useState } from 'react';
 import { useRouter } from 'expo-router';
 import FicheUser from '@/components/FicheUser';
+import FormAjoutUser from '@/components/FormAjoutUser';
 import { User } from '@/model/User';
-import { fetchUsers } from '@/service/UserService';
+import { fetchUsers, deleteUser } from '@/service/UserService';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function Tab2Screen() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [userToDelete, setUserToDelete] = useState<User | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -32,7 +37,39 @@ export default function Tab2Screen() {
         pathname: '/infos/details/[id]',
         params: { id: userId.toString() }
     } as any);
-};
+  };
+  
+  const handleSuccess = () => {
+    // Recharger la liste après ajout
+    loadUsers();
+  };
+
+  const handleDeletePress = (user: User) => {
+    setUserToDelete(user);
+    setDeleteModalVisible(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!userToDelete) return;
+
+    const result = await deleteUser(userToDelete.id);
+    
+    if (result.success) {
+      // Supprimer de la liste locale
+      setUsers(users.filter(u => u.id !== userToDelete.id));
+    } else {
+      throw new Error(result.message);
+    }
+  };
+
+  if (loading) {
+    return (
+      <View style={styles.centerContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+        <Text style={styles.loadingText}>Chargement...</Text>
+      </View>
+    );
+  }
 
   if (loading) {
     return (
@@ -52,27 +89,69 @@ export default function Tab2Screen() {
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.scrollContainer}>
-      <Text style={styles.spacer}>
-      
-                          </Text>
-      <Text style={styles.title}>Utilisateurs de l&apos;API</Text>
-      {users.map((user) => (
+    <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <Text style={styles.spacer}></Text>
+        <Text style={styles.title}>Utilisateurs de l&apos;API</Text>
+        {users.map((user) => (
+          <TouchableOpacity 
+            key={user.id} 
+            onPress={() => handleUserPress(user.id)}
+            activeOpacity={0.7}
+          >
+            <FicheUser 
+              {...user} 
+              onDelete={() => handleDeletePress(user)}
+            />
+          </TouchableOpacity>
+        ))}
+        <Text style={styles.copyright}>Copyright</Text>
+        </ScrollView>
+
         <TouchableOpacity 
-          key={user.id} 
-          onPress={() => handleUserPress(user.id)}
-          activeOpacity={0.7}
+          style={styles.fab}
+          onPress={() => setModalVisible(true)}
         >
-          <FicheUser {...user} />
+          <Ionicons name="add" size={30} color="white" />
         </TouchableOpacity>
-      ))}
-      <Text style={styles.copyright}>Copyright</Text>
-    </ScrollView>
+
+        {/* Modal formulaire */}
+        <FormAjoutUser
+          visible={modalVisible}
+          onClose={() => setModalVisible(false)}
+          onSuccess={handleSuccess}
+        />
+      </View>
+
+    
   );
 }
 
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+  },
+  fab: {
+    position: 'absolute',
+    right: 20,
+    bottom: 80,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: '#4CAF50',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 8,
+  },
   scrollContainer: {
     flexGrow: 1,
     alignItems: 'center',
